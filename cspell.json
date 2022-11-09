@@ -1,0 +1,17 @@
+{
+  "version": "0.2",
+  "words": [
+    "hbox", //
+    "vbox"
+  ],
+  "ignorePaths": [
+    "package.json",
+    "package-lock.json",
+    "yarn.lock",
+    ".vscode/**",
+    "src/main/i18n/translations/!(en).ts",
+    "**/*.min.js"
+  ],
+  "ignoreRegExpList": [],
+  "useGitignore": true
+}
