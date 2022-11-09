@@ -1,4 +1,4 @@
-export type { Theme } from './shoelace-themes/default-theme';
+export type { Theme } from './shoelace-themes/generated/default-theme';
 export { ThemeModifiers } from './shoelace-themes/theme-modifiers';
 export { ColorSchemes } from './shoelace-themes/color-schemes';
 

@@ -2,13 +2,19 @@ import path from 'path';
 import color from 'color';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import prettier from 'prettier';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const inputFile = path.join(
   __dirname,
-  '../node_modules/@shoelace-style/shoelace/dist/themes/light.styles.js'
+  '../node_modules/@shoelace-style/shoelace/dist/themes/light.css'
+);
+
+const outputFile = path.join(
+  __dirname,
+  '../src/main/shoelace-themes/generated/default-theme.ts'
 );
 
 const input = fs.readFileSync(inputFile, 'utf8');
@@ -33,22 +39,38 @@ const colorShades = [
   )
 ].sort((a, b) => (a > b ? 1 : -1));
 
-const utilityStyles = input
-  .split(/^\s*}\s*$/m)
-  .slice(1)
-  .join('}\n');
+const utilityStyles =
+  prettier
+    .format(
+      input
+        .split(/^\s*}\s*$/m)
+        .slice(1)
+        .join('}\n')
+        .trim(),
+      {
+        parser: 'css'
+      }
+    )
+    .trim()
+    .replaceAll(/^/gm, '  ') + '\n';
 
 const themeTokens = input
   .match(/--sl-[a-z0-9-]+:[^;]+;/gm) //
   .map((it) => it.split(/:/))
-  .map((it) => [it[0].substring(5).trim(), it[1].trim()]);
+  .map((it) => [
+    it[0].substring(5).trim(),
+    it[1]
+      .substring(0, it[1].length - 1)
+      .replaceAll(/\s+/gm, ' ')
+      .trim()
+  ]);
 
 themeTokens.forEach(([key, value], idx) => {
   if (
     key.match(/^color-[a-z]+-\d+$/) &&
-    value.match(/var\(--sl[a-z0-9-]*\);/)
+    value.match(/^var\(--sl[a-z0-9-]*\)$/)
   ) {
-    const referredKey = value.substring(9, value.length - 2);
+    const referredKey = value.substring(9, value.length - 1);
 
     themeTokens[idx][1] =
       themeTokens[themeTokens.findIndex((it) => it[0] === referredKey)][1];
@@ -58,22 +80,20 @@ themeTokens.forEach(([key, value], idx) => {
 themeTokens.forEach(([key, value], idx) => {
   if (
     key.match(/^color-[a-z]+-\d+$/) && //
-    value.match(/hsl\([^)]+\);/)
+    value.match(/hsl\([^)]+\)/)
   ) {
-    const oldColorString = themeTokens[idx][1];
+    const newColorString = color(themeTokens[idx][1]).hex();
 
-    const newColorString = color(
-      oldColorString.substring(0, oldColorString.length - 1)
-    ).hex();
-
-    themeTokens[idx][1] = `${newColorString};`;
+    themeTokens[idx][1] = `${newColorString}`;
   }
 });
 
-console.log(themeTokens.filter((it) => it[0].match(/primary/)));
+let output = `
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // !!! This file is auto-generated - do not modify it !!!
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-const template = `
-  // === exports =======================================================
+  // === exports =====================================================
 
   export {
     colorShades,
@@ -82,8 +102,37 @@ const template = `
     semanticColors,
     utilityStyles
   };
+
+  export type { Theme };
+
+  // === types =======================================================
+
+  type ThemeTokens = typeof defaultTheme;
+  interface Theme extends ThemeTokens {}
+
+  // === main ========================================================
+
+  const semanticColors = Object.freeze(['${semanticColors.join("', '")}']);
+  
+  const paletteColors = Object.freeze(['${paletteColors.join("', '")}']);
+
+  const colorShades = Object.freeze([${colorShades.join(',')}]);
+
+  const utilityStyles = \`\n${utilityStyles}\`;
+
+  const defaultTheme = {
+    'light': 'inherit',
+    'dark': ' ',
+    ${themeTokens.map((it) => `'${it[0]}': '${it[1]}',`).join('\n')}
+  };
+
+  Object.freeze(defaultTheme);
 `;
 
-let result = template;
+output = prettier.format(output, {
+  parser: 'typescript',
+  singleQuote: true,
+  quoteProps: 'consistent'
+});
 
-//console.log(result);
+fs.writeFileSync(outputFile, output);

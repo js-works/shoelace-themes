@@ -1,5 +1,9 @@
-import type { Theme } from './default-theme';
-import { colorShades, paletteColors, semanticColors } from './default-theme';
+import type { Theme } from './generated/default-theme';
+import {
+  colorShades,
+  paletteColors,
+  semanticColors
+} from './generated/default-theme';
 
 // === exports =======================================================
 
@@ -54,7 +58,7 @@ const modifiers = {
       const isDark = theme.light === ' ';
 
       for (const semanticColor of semanticColors) {
-        const colorHex = colorScheme[`${semanticColor}Color`];
+        const colorHex = (colorScheme as any)[`${semanticColor}Color`];
 
         if (colorHex) {
           Object.assign(ret, {
@@ -78,7 +82,7 @@ const modifiers = {
       const darkTokens: Record<string, string> = Object.assign({}, tokens);
 
       [...semanticColors, ...paletteColors].forEach((color) => {
-        if (tokens[`color-${color}-500`].includes('var(')) {
+        if ((tokens as any)[`color-${color}-500`].includes('var(')) {
           return;
         }
 

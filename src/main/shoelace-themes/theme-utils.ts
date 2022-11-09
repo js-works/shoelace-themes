@@ -1,13 +1,10 @@
-import { utilityStyles } from './default-theme';
-import { defaultTheme } from './default-theme';
+import { utilityStyles } from './generated/default-theme';
+import { defaultTheme } from './generated/default-theme';
+import type { Theme } from './generated/default-theme';
 
 // === exports =======================================================
 
 export { convertThemeToCss, customizeTheme, loadTheme };
-
-// === exported types ================================================
-
-type Theme = typeof defaultTheme;
 
 // === local types ===================================================
 
