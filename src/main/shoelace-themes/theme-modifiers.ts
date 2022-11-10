@@ -1,9 +1,10 @@
-import type { Theme } from './generated/default-theme';
 import {
   colorShades,
   paletteColors,
   semanticColors
 } from './generated/default-theme';
+
+import type { Theme } from './generated/default-theme';
 
 // === exports =======================================================
 
