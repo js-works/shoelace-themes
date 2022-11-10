@@ -1,7 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { repeat } from 'lit/directives/repeat';
-import { unsafeHTML } from 'lit/directives/unsafe-html';
 import { convertThemeToCss } from '../main/shoelace-themes';
 import { customThemes } from './misc/custom-themes';
 

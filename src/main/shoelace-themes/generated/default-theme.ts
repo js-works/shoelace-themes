@@ -77,7 +77,7 @@ const utilityStyles = `
 `;
 
 const defaultTheme = {
-  'light': 'inherit',
+  'light': 'initial',
   'dark': ' ',
   'color-gray-50': '#F9F9F9',
   'color-gray-100': '#F4F4F5',
