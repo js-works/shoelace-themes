@@ -121,7 +121,7 @@ let output = `
   const utilityStyles = \`\n${utilityStyles}\`;
 
   const defaultTheme = {
-    'light': 'inherit',
+    'light': 'initial',
     'dark': ' ',
     ${themeTokens.map((it) => `'${it[0]}': '${it[1]}',`).join('\n')}
   };

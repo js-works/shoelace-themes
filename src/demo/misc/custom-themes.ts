@@ -3,7 +3,7 @@ import {
   ColorSchemes,
   Theme,
   ThemeModifiers
-} from '../../../main/shoelace-themes';
+} from '../../main/shoelace-themes';
 
 export const customThemes: Record<string, { name: string; theme: Theme }> = {
   'sky-blue-light': {
@@ -113,7 +113,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
     name: 'Violet (dark)',
     theme: customizeTheme(
       ThemeModifiers.builder()
-        .colors(ColorSchemes.pink)
+        .colors(ColorSchemes.violet)
         .modern()
         .compact()
         .dark()

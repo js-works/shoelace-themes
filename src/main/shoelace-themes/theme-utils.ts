@@ -23,7 +23,7 @@ function customizeTheme(
 function convertThemeToCss(theme: Theme, selector: string) {
   const lines: string[] = [
     `${selector} {`,
-    `  color-scheme: ${theme.light === 'inherit' ? 'light' : 'dark'};`
+    `  color-scheme: ${theme.light === 'initial' ? 'light' : 'dark'};`
   ];
 
   Object.entries(theme).forEach(([key, value]) => {

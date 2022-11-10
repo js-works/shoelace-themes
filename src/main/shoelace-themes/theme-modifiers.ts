@@ -55,7 +55,7 @@ const modifiers = {
   colors(colorScheme: ColorScheme) {
     return (theme: Theme): Partial<Theme> => {
       const ret: Partial<Theme> = {};
-      const isDark = theme.light === ' ';
+      const isDark = theme.dark === 'initial';
 
       for (const semanticColor of semanticColors) {
         const colorHex = (colorScheme as any)[`${semanticColor}Color`];
@@ -71,9 +71,9 @@ const modifiers = {
     };
   },
 
-  dark(veryDark: boolean = false) {
+  dark() {
     return (tokens: Theme): Partial<Theme> => {
-      if (tokens.dark === 'inherit') {
+      if (tokens.dark === 'initial') {
         throw new Error(
           'Colors cannot be inverted to dark mode as base theme is already dark'
         );
@@ -95,40 +95,21 @@ const modifiers = {
         }
       });
 
-      if (!veryDark) {
-        Object.assign(darkTokens, {
-          //'color-neutral-0': 'rgb(58 67 77)',
-          'color-neutral-0': 'rgb(52 52 52)',
-          'color-neutral-50': 'rgb(65 75 86)',
-          'color-neutral-100': 'rgb(93 93 97)',
-          'color-neutral-200': 'rgb(103 103 106)',
-          'color-neutral-300': 'rgb(117 117 114)',
-          'color-neutral-400': 'rgb(120 120 124)',
-          'color-neutral-500': 'rgb(128 128 127)',
-          'color-neutral-600': 'rgb(166 166 175)',
-          'color-neutral-700': 'rgb(217 217 221)',
-          'color-neutral-800': 'rgb(233 233 236)',
-          'color-neutral-900': 'rgb(249 249 250)',
-          'color-neutral-950': 'rgb(252 252 253)',
-          'color-neutral-1000': 'rgb(255 255 255)'
-        });
-      } else {
-        Object.assign(darkTokens, {
-          'color-neutral-0': 'rgb(30 30 33)',
-          'color-neutral-50': 'rgb(36 36 39)',
-          'color-neutral-100': 'rgb(40 40 43)',
-          'color-neutral-200': 'rgb(43 43 46)',
-          'color-neutral-300': 'rgb(67 67 74)',
-          'color-neutral-400': 'rgb(86 86 95)',
-          'color-neutral-500': 'rgb(118 118 127)',
-          'color-neutral-600': 'rgb(166 166 175)',
-          'color-neutral-700': 'rgb(217 217 221)',
-          'color-neutral-800': 'rgb(233 233 236)',
-          'color-neutral-900': 'rgb(249 249 250)',
-          'color-neutral-950': 'rgb(252 252 253)',
-          'color-neutral-1000': 'rgb(255 255 255)'
-        });
-      }
+      Object.assign(darkTokens, {
+        'color-neutral-0': 'rgb(30 30 33)',
+        'color-neutral-50': 'rgb(36 36 39)',
+        'color-neutral-100': 'rgb(40 40 43)',
+        'color-neutral-200': 'rgb(43 43 46)',
+        'color-neutral-300': 'rgb(67 67 74)',
+        'color-neutral-400': 'rgb(86 86 95)',
+        'color-neutral-500': 'rgb(118 118 127)',
+        'color-neutral-600': 'rgb(166 166 175)',
+        'color-neutral-700': 'rgb(217 217 221)',
+        'color-neutral-800': 'rgb(233 233 236)',
+        'color-neutral-900': 'rgb(249 249 250)',
+        'color-neutral-950': 'rgb(252 252 253)',
+        'color-neutral-1000': 'rgb(255 255 255)'
+      });
 
       Object.assign(darkTokens, {
         'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',

@@ -25,6 +25,6 @@
     "typeRoots": ["node_modules/@types"],
     "types": []
   },
-  "include": ["./src/main/**/*.*", "src/stories/demo/**/*.*"],
+  "include": ["./src/main/**/*.*", "src/demo/**/*.*"],
   "exclude": ["node_modules"]
 }

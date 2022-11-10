@@ -2,8 +2,10 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { repeat } from 'lit/directives/repeat';
 import { unsafeHTML } from 'lit/directives/unsafe-html';
-import { convertThemeToCss } from '../../main/shoelace-themes';
+import { convertThemeToCss } from '../main/shoelace-themes';
 import { customThemes } from './misc/custom-themes';
+
+import showcasePalette from './showcases/palette';
 
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -57,7 +59,7 @@ class DemoApp extends LitElement {
       ? location.hash.substring(1).split('/')[1] || ''
       : '';
 
-    if (!Object.hasOwn(customThemes, activeTheme) && activeTheme !== 'dark') {
+    if (!customThemes.hasOwnProperty(activeTheme) && activeTheme !== 'dark') {
       activeTheme = 'light';
     }
 
@@ -67,7 +69,7 @@ class DemoApp extends LitElement {
   }
 
   private _updateTheme = () => {
-    const theme = Object.hasOwn(customThemes, this._activeTheme)
+    const theme = customThemes.hasOwnProperty(this._activeTheme)
       ? convertThemeToCss(customThemes[this._activeTheme].theme, ':root')
       : this._activeTheme === 'dark'
       ? darkTheme.toString().replace(':host', ':root')
@@ -121,34 +123,36 @@ class DemoApp extends LitElement {
         <sl-tab-group placement="start" class="content">
           <sl-tab
             slot="nav"
-            panel="date-picker"
-            ?active=${this._activeTab === 'date-picker'}
+            panel="palette"
+            ?active=${this._activeTab === 'palette'}
           >
-            Date picker
+            Palette
           </sl-tab>
           <sl-tab
             slot="nav"
-            panel="date-fields"
-            ?active=${this._activeTab === 'date-fields'}
+            panel="assorted"
+            ?active=${this._activeTab === 'assorted'}
           >
-            Date fields
+            Assorted
           </sl-tab>
           <sl-tab
             slot="nav"
-            panel="dialogs"
-            ?active=${this._activeTab === 'dialogs'}
+            panel="alert"
+            ?active=${this._activeTab === 'alert'}
           >
-            Dialogs
+            Alert
           </sl-tab>
           <sl-tab
             slot="nav"
-            panel="toasts"
-            ?active=${this._activeTab === 'toasts'}
+            panel="avatar"
+            ?active=${this._activeTab === 'avatar'}
           >
-            Toasts
+            Avatar
           </sl-tab>
-          <sl-tab-panel name="date-picker">date picker </sl-tab-panel>
-          <sl-tab-panel name="date-fields">date fields </sl-tab-panel>
+          <sl-tab-panel name="palette">${showcasePalette}</sl-tab-panel>
+          <sl-tab-panel name="assorted">Assorted</sl-tab-panel>
+          <sl-tab-panel name="alert">Alert</sl-tab-panel>
+          <sl-tab-panel name="avatar">Avatar</sl-tab-panel>
         </sl-tab-group>
       </div>
     `;
