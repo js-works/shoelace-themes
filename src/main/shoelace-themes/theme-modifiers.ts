@@ -97,6 +97,11 @@ const modifiers = {
       });
 
       Object.assign(darkTokens, {
+        light: ' ',
+        dark: 'initial'
+      });
+
+      Object.assign(darkTokens, {
         'color-neutral-0': 'rgb(30 30 33)',
         'color-neutral-50': 'rgb(36 36 39)',
         'color-neutral-100': 'rgb(40 40 43)',
@@ -128,7 +133,7 @@ const modifiers = {
   },
 
   modern(veryProgressive = false) {
-    return (tokens: Theme): Partial<Theme> => {
+    return (): Partial<Theme> => {
       let ret: Partial<Theme> = {
         'font-sans':
           "'Open Sans', -apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
@@ -163,7 +168,7 @@ const modifiers = {
   },
 
   compact() {
-    return (tokens: Theme): Partial<Theme> => {
+    return (): Partial<Theme> => {
       return {
         'font-size-medium': '0.92rem',
         'font-size-x-large': '1.5rem',
