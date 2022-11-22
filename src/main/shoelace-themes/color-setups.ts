@@ -2,7 +2,7 @@
 
 export { ColorSetups };
 
-// === color schemes =================================================
+// === color setups ==================================================
 
 // For color naming see: https://chir.ag/projects/name-that-color/#DD5A8C
 
