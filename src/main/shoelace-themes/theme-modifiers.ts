@@ -12,7 +12,7 @@ export { ThemeModifiers };
 
 // === local types ===================================================
 
-export type ColorScheme = {
+export type ColorSetup = {
   primaryColor?: string;
   successColor?: string;
   warningColor?: string;
@@ -53,13 +53,13 @@ const colorLuminances = [
 // === theme modifiers ===============================================
 
 const modifiers = {
-  colors(colorScheme: ColorScheme) {
+  colors(colorSetup: ColorSetup) {
     return (theme: Theme): Partial<Theme> => {
       const ret: Partial<Theme> = {};
       const isDark = theme.dark === 'initial';
 
       for (const semanticColor of semanticColors) {
-        const colorHex = (colorScheme as any)[`${semanticColor}Color`];
+        const colorHex = (colorSetup as any)[`${semanticColor}Color`];
 
         if (colorHex) {
           Object.assign(ret, {
@@ -150,7 +150,7 @@ const modifiers = {
         'input-border-color-hover': 'var(--sl-color-neutral-600)',
         'input-border-color-focus': 'var(--sl-color-primary-700)',
 
-        'overlay-background-color': 'hsl(0 0% 0% / 60%)'
+        'overlay-background-color': 'hsl(0 0% 0% / 50%)'
       };
 
       if (veryProgressive) {

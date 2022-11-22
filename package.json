@@ -1,6 +1,6 @@
 {
   "name": "shoelace-themes",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "",
   "type": "module",
   "main": "./dist/shoelace-themes.cjs.js",
@@ -27,16 +27,16 @@
   "homepage": "https://github.com/js-works/shoelace-themes#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "@shoelace-style/localize": "^3.0.1",
+    "@shoelace-style/localize": "^3.0.2",
     "@shoelace-style/shoelace": "^2.0.0-beta.83",
     "archiver": "^5.3.1",
     "color": "^4.2.3",
     "del": "^7.0.0",
-    "esbuild": "^0.15.13",
+    "esbuild": "^0.15.15",
     "lit": "^2.4.1",
     "prettier": "^2.7.1",
     "terser": "^5.15.1",
-    "typescript": "4.8.4",
-    "vite": "^3.2.3"
+    "typescript": "4.9.3",
+    "vite": "^3.2.4"
   }
 }

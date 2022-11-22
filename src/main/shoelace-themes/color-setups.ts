@@ -1,12 +1,12 @@
 // === exports =======================================================
 
-export { ColorSchemes };
+export { ColorSetups };
 
 // === color schemes =================================================
 
 // For color naming see: https://chir.ag/projects/name-that-color/#DD5A8C
 
-const ColorSchemes = Object.freeze({
+const ColorSetups = Object.freeze({
   default: {
     primaryColor: '#1C73E8',
     // primaryColor: '#2899e2',
