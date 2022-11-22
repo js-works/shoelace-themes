@@ -410,6 +410,7 @@ const defaultTheme = {
   'input-border-width': '1px',
   'input-required-content': '"*"',
   'input-required-content-offset': '-2px',
+  'input-required-content-color': 'var(--sl-input-label-color)',
   'input-border-radius-small': 'var(--sl-border-radius-medium)',
   'input-border-radius-medium': 'var(--sl-border-radius-medium)',
   'input-border-radius-large': 'var(--sl-border-radius-medium)',
