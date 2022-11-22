@@ -150,7 +150,7 @@ const modifiers = {
         'input-border-color-hover': 'var(--sl-color-neutral-600)',
         'input-border-color-focus': 'var(--sl-color-primary-700)',
 
-        'overlay-background-color': 'hsl(0 0% 0% / 50%)'
+        'overlay-background-color': 'hsl(0 0% 0% / 55%)'
       };
 
       if (veryProgressive) {
