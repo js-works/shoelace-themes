@@ -1,3 +1,5 @@
+import type { ColorSetup } from './theme-modifiers';
+
 // === exports =======================================================
 
 export { ColorSetups };
@@ -6,7 +8,7 @@ export { ColorSetups };
 
 // For color naming see: https://chir.ag/projects/name-that-color/#DD5A8C
 
-const ColorSetups = Object.freeze({
+const ColorSetups = colorSetups({
   default: {
     primaryColor: '#1C73E8',
     // primaryColor: '#2899e2',
@@ -60,6 +62,19 @@ const ColorSetups = Object.freeze({
 
   orchid: {
     primaryColor: '#BF68BD'
+  },
+
+  bootstrap: {
+    primaryColor: '#0d6efd',
+    successColor: '#198754',
+    dangerColor: '#dc3545',
+    warningColor: '#ffc107',
+    infoColor: '#0dcaf0'
+  },
+
+  baseweb: {
+    primaryColor: '#266EF1',
+    dangerColor: '#F25238'
   },
 
   temp: {
@@ -138,3 +153,9 @@ const ColorSetups = Object.freeze({
     primaryColor: '#ff6347'
   }
 });
+
+function colorSetups<T extends Record<string, Partial<ColorSetup>>>(
+  setups: T
+): Readonly<T> {
+  return Object.freeze(setups);
+}

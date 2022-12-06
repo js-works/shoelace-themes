@@ -143,7 +143,7 @@ const modifiers = {
         'border-radius-large': '2px',
         'border-radius-x-large': '3px',
 
-        'focus-ring-width': '1px',
+        'focus-ring-width': '1.5px',
         'input-focus-ring-color': 'var(--sl-color-primary-400)',
 
         'input-border-color': 'var(--sl-color-neutral-400)',
