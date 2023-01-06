@@ -71,8 +71,11 @@ const utilityStyles = `
   }
   
   .sl-toast-stack sl-alert {
-    --box-shadow: var(--sl-shadow-large);
     margin: var(--sl-spacing-medium);
+  }
+  
+  .sl-toast-stack sl-alert::part(base) {
+    box-shadow: var(--sl-shadow-large);
   }
 `;
 
@@ -450,7 +453,9 @@ const defaultTheme = {
   'input-help-text-font-size-medium': 'var(--sl-font-size-small)',
   'input-help-text-font-size-large': 'var(--sl-font-size-medium)',
   'input-help-text-color': 'var(--sl-color-neutral-500)',
-  'toggle-size': '1rem',
+  'toggle-size-small': '0.875rem',
+  'toggle-size-medium': '1.125rem',
+  'toggle-size-large': '1.375rem',
   'overlay-background-color': 'hsl(240 3.8% 46.1% / 33%)',
   'panel-background-color': 'var(--sl-color-neutral-0)',
   'panel-border-color': 'var(--sl-color-neutral-200)',

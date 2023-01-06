@@ -145,6 +145,7 @@ const modifiers = {
 
         'focus-ring-width': '1.5px',
         'input-focus-ring-color': 'var(--sl-color-primary-400)',
+        'input-required-content-color': 'var(--sl-color-danger-800)',
 
         'input-border-color': 'var(--sl-color-neutral-400)',
         'input-border-color-hover': 'var(--sl-color-neutral-600)',
