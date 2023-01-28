@@ -1,11 +1,17 @@
 {
   "name": "shoelace-themes",
-  "version": "0.0.11",
+  "version": "0.0.15",
   "description": "",
   "type": "module",
   "main": "./dist/shoelace-themes.cjs.js",
   "module": "./dist/shoelace-themes.esm.js",
   "types": "./dist/types/shoelace-themes.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/shoelace-themes.esm.js",
+      "require": "./dist/shoelace-themes.cjs.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -28,13 +34,13 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@shoelace-style/localize": "^3.0.4",
-    "@shoelace-style/shoelace": "^2.0.0-beta.88",
+    "@shoelace-style/shoelace": "^2.0.0",
     "archiver": "^5.3.1",
     "color": "^4.2.3",
     "del": "^7.0.0",
-    "esbuild": "^0.16.14",
-    "lit": "^2.5.0",
-    "prettier": "^2.8.1",
+    "esbuild": "^0.17.5",
+    "lit": "^2.6.1",
+    "prettier": "^2.8.3",
     "terser": "^5.16.1",
     "typescript": "4.9.4",
     "vite": "^4.0.4"

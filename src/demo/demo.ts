@@ -6,15 +6,15 @@ import { customThemes } from './misc/custom-themes';
 
 import showcasePalette from './showcases/palette';
 
-import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
-import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
-import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
-import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
-import SlRadioButton from '@shoelace-style/shoelace/dist/components/radio-button/radio-button';
-import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
+import '@shoelace-style/shoelace/dist/components/divider/divider';
+import '@shoelace-style/shoelace/dist/components/icon/icon';
+import '@shoelace-style/shoelace/dist/components/select/select';
+import '@shoelace-style/shoelace/dist/components/option/option';
+import '@shoelace-style/shoelace/dist/components/tab/tab';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
+import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
+import '@shoelace-style/shoelace/dist/components/radio-button/radio-button';
+import '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 
 import demoIcon from './demo.icon';
 
@@ -28,21 +28,6 @@ import demoStyles from './demo.styles';
 @customElement('demo-app')
 class DemoApp extends LitElement {
   static styles = demoStyles;
-
-  static {
-    // required components (to prevent too much tree-shaking)
-    void [
-      SlDivider,
-      SlIcon,
-      SlMenuItem,
-      SlRadioButton,
-      SlRadioGroup,
-      SlSelect,
-      SlTab,
-      SlTabGroup,
-      SlTabPanel
-    ];
-  }
 
   private _activeTab: string;
   private _activeTheme: string;
@@ -106,15 +91,15 @@ class DemoApp extends LitElement {
             value=${this._activeTheme}
             @sl-change=${this._onThemeChange}
           >
-            <sl-menu-item value="light">Light</sl-menu-item>
-            <sl-menu-item value="dark">Dark</sl-menu-item>
+            <sl-option value="light">Light</sl-option>
+            <sl-option value="dark">Dark</sl-option>
             <sl-divider></sl-divider>
             ${repeat(
               Object.entries(customThemes),
               ([themeKey, { name: themeName }]) => html`
-                <sl-menu-item value=${themeKey} ?active=${false}>
+                <sl-option value=${themeKey} ?active=${false}>
                   ${themeName}
-                </sl-menu-item>
+                </sl-option>
               `
             )}
           </sl-select>
