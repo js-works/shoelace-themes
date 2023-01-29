@@ -68,6 +68,11 @@ const modifiers = {
         }
       }
 
+      ret['input-focus-ring-color'] = ret['color-primary-500']!.replace(
+        ')',
+        ' / 40%)'
+      );
+
       return ret;
     };
   },
@@ -99,7 +104,7 @@ const modifiers = {
       Object.assign(darkTokens, {
         light: ' ',
         dark: 'initial'
-      });
+      } satisfies Partial<Theme>);
 
       Object.assign(darkTokens, {
         'color-neutral-0': 'rgb(30 30 33)',
@@ -115,7 +120,7 @@ const modifiers = {
         'color-neutral-900': 'rgb(249 249 250)',
         'color-neutral-950': 'rgb(252 252 253)',
         'color-neutral-1000': 'rgb(255 255 255)'
-      });
+      } satisfies Partial<Theme>);
 
       Object.assign(darkTokens, {
         'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',
@@ -123,10 +128,9 @@ const modifiers = {
         'shadow-medium': '0 2px 4px rgb(0 0 0 / 24%)',
         'shadow-large': '0 2px 8px rgb(0 0 0 / 24%)',
         'shadow-x-large': '0 4px 16px rgb(0 0 0 / 24%)',
-        'focus-ring-alpha': '45%',
         'overlay-background-color': 'hsl(0 0% 0% / 43%)',
         'panel-background-color': 'var(--sl-color-neutral-50)'
-      });
+      } satisfies Partial<Theme>);
 
       return darkTokens;
     };
