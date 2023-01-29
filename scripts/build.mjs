@@ -19,26 +19,21 @@ async function build() {
   await rm('./dist', { recursive: true, force: true });
 
   for (const pkg of ['shoelace-themes']) {
-    for (const format of ['esm' /*, 'cjs'*/]) {
-      const outfile =
-        format === 'esm' //
-          ? `./dist/${pkg}.js`
-          : `./dist/${pkg}.${format}.js`;
+    const outfile = `./dist/${pkg}.mjs`;
 
-      await esbuild.build({
-        entryPoints: [`./src/main/${pkg}.ts`],
-        bundle: true,
-        outfile,
-        tsconfig: './tsconfig.build.json',
-        target: 'esnext',
-        minify: true,
-        sourcemap: true,
-        format,
-        external: ['lit', '@shoelace-style/shoelace/*']
-      });
+    await esbuild.build({
+      entryPoints: [`./src/main/${pkg}.ts`],
+      bundle: true,
+      outfile,
+      tsconfig: './tsconfig.build.json',
+      target: 'esnext',
+      minify: true,
+      sourcemap: true,
+      format: 'esm',
+      external: ['lit', '@shoelace-style/shoelace/*']
+    });
 
-      await createBrotliFile(outfile, outfile + '.br');
-    }
+    await createBrotliFile(outfile, outfile + '.br');
   }
 
   execSync(

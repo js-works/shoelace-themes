@@ -1,13 +1,11 @@
 {
   "name": "shoelace-themes",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "description": "",
   "type": "module",
-  "main": "dist/shoelace-themes.js",
-  "types": "dist/types/shoelace-themes.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/shoelace-themes.js",
+      "import": "./dist/shoelace-themes.mjs",
       "types": "./dist/types/shoelace-themes.d.ts"
     }
   },
