@@ -4,7 +4,7 @@ import type { Theme } from './generated/default-theme';
 
 // === exports =======================================================
 
-export { convertThemeToCss, customizeTheme, loadTheme };
+export { convertThemeToCss, customizeDefaultTheme, customizeTheme, loadTheme };
 
 // === local types ===================================================
 
@@ -13,11 +13,18 @@ type ThemeModifier = (theme: Theme) => Partial<Theme>;
 // === exported functions ============================================
 
 function customizeTheme(
+  theme: Theme,
   ...modifiers: (ThemeModifier | ThemeModifier[])[] //
 ): Theme {
-  const tokens = { ...defaultTheme };
+  const tokens = { ...theme };
   modifiers.flat(1).forEach((mod) => Object.assign(tokens, mod(tokens)));
   return Object.freeze(tokens);
+}
+
+function customizeDefaultTheme(
+  ...modifiers: (ThemeModifier | ThemeModifier[])[] //
+): Theme {
+  return customizeTheme(defaultTheme, ...modifiers);
 }
 
 function convertThemeToCss(theme: Theme, selector: string) {

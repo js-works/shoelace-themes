@@ -6,6 +6,7 @@ export { defaultTheme as defaultThemeLch } from './shoelace-themes/generated/def
 
 export {
   convertThemeToCss,
+  customizeDefaultTheme,
   customizeTheme,
   loadTheme
 } from './shoelace-themes/theme-utils';

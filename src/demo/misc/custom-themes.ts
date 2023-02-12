@@ -1,5 +1,7 @@
 import {
   customizeTheme,
+  customizeDefaultTheme,
+  defaultThemeLch,
   ColorSetups,
   Theme,
   ThemeModifiers
@@ -8,7 +10,7 @@ import {
 export const customThemes: Record<string, { name: string; theme: Theme }> = {
   'sky-blue-light': {
     name: 'Sky Blue (light)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.skyBlue)
         .modern()
@@ -19,7 +21,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'sky-blue-dark': {
     name: 'Sky Blue (dark)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.skyBlue)
         .modern()
@@ -31,7 +33,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'pacific-blue-light': {
     name: 'Pacific Blue (light)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.pacificBlue)
         .modern()
@@ -42,7 +44,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'teal-light': {
     name: 'Teal (light)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.teal)
         .modern()
@@ -53,7 +55,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'teal-dark': {
     name: 'Teal (dark)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.teal)
         .modern()
@@ -65,7 +67,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'pacific-blue-dark': {
     name: 'Pacific Blue (dark)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.pacificBlue)
         .modern()
@@ -77,7 +79,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'pink-light': {
     name: 'Pink (light)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.pink)
         .modern()
@@ -88,7 +90,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'pink-dark': {
     name: 'Pink (dark)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.pink)
         .modern()
@@ -100,7 +102,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'violet-light': {
     name: 'Violet (light)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.violet)
         .modern()
@@ -111,7 +113,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'violet-dark': {
     name: 'Violet (dark)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.violet)
         .modern()
@@ -123,7 +125,7 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'custom-light': {
     name: 'Custom (light)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.blue)
         .modern()
@@ -134,13 +136,24 @@ export const customThemes: Record<string, { name: string; theme: Theme }> = {
 
   'custom-dark': {
     name: 'Custom (dark)',
-    theme: customizeTheme(
+    theme: customizeDefaultTheme(
       ThemeModifiers.builder()
         .colors(ColorSetups.blue)
         .modern()
         .compact()
         .dark()
         .build()
+    )
+  },
+  'lch-light': {
+    name: 'LCH (light)',
+    theme: defaultThemeLch
+  },
+  'lch-dark': {
+    name: 'LCH modern (light)',
+    theme: customizeTheme(
+      defaultThemeLch,
+      ThemeModifiers.builder().modern().compact().build()
     )
   }
 };

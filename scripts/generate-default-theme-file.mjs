@@ -141,13 +141,13 @@ const outputFileLch = path.join(
 
 const outputLch = output
   .replaceAll(/'(#[0-9A-F]{6})',/g, (_, hex) => {
-    const lch = chroma(hex).lab();
+    const lch = chroma(hex).lch();
 
     const l = Math.round(lch[0]);
     const c = Math.round(lch[1]);
     const h = Math.round(lch[2]);
 
-    return `'lab(${l} ${c} ${h})', // ${hex}`.replace('NaN', 0);
+    return `'lch(${l} ${c} ${h})', // ${hex}`.replace('NaN', 0);
   })
   .replace('const defaultTheme =', 'const defaultTheme: Theme = <Theme> ')
   .replaceAll(/'color-[a-z]+-\d+':/g, (line) => {
@@ -165,7 +165,7 @@ const outputLch = output
 
     const lightnessValuesLight = [
       97, // 50
-      57, // 100
+      95, // 100
       89, // 200
       81, // 300
       72, // 400
@@ -179,12 +179,12 @@ const outputLch = output
 
     [...semanticColors, ...paletteColors].forEach((color) => {
       const lch = defaultTheme[\`color-\${color}-500\` as keyof Theme]
-        .substring(4).split(' ');
+        .slice(4, -1).split(' ');
 
       colorShades.forEach((shade, shadeIdx) => {
         lch[0] = String(lightnessValuesLight[shadeIdx]);
         defaultTheme[\`color-\${color}-\${shade}\` as keyof Theme] =
-          \`lhc(\${lch.join(' ')})\`;
+          \`lch(\${lch.join(' ')})\`;
       });
     });
     
