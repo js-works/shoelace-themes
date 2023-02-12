@@ -487,7 +487,6 @@ const lightnessValuesLight = [
   30, // 900
   19, // 950
 ];
-
 [...semanticColors, ...paletteColors].forEach((color) => {
   const lch = defaultTheme[`color-${color}-500` as keyof Theme]
     .slice(4, -1)
