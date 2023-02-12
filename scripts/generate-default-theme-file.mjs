@@ -89,7 +89,7 @@ themeTokens.forEach(([key, value], idx) => {
   }
 });
 
-let output = `
+const output = `
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // !!! This file is auto-generated - do not modify it !!!
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -130,13 +130,7 @@ let output = `
   Object.freeze(defaultTheme);
 `;
 
-output = prettier.format(output, {
-  parser: 'typescript',
-  singleQuote: true,
-  quoteProps: 'consistent'
-});
-
-fs.writeFileSync(outputFile, output);
+fs.writeFileSync(outputFile, prettify(output));
 
 // ===================================================================
 
@@ -145,14 +139,75 @@ const outputFileLch = path.join(
   '../src/main/shoelace-themes/generated/default-theme-lch.ts'
 );
 
-const outputLch = output.replaceAll(/'(#[0-9A-F]{6})'/g, (all, hex) => {
-  const lch = chroma(hex).lch();
+const outputLch = output
+  .replaceAll(/'(#[0-9A-F]{6})',/g, (_, hex) => {
+    const lch = chroma(hex).lab();
 
-  const l = Math.round(lch[0]);
-  const c = Math.round(lch[1]);
-  const h = Math.round(lch[2]);
+    const l = Math.round(lch[0]);
+    const c = Math.round(lch[1]);
+    const h = Math.round(lch[2]);
 
-  return `'lch(${l} ${c} ${h})'`.replace('NaN', 0);
-});
+    return `'lab(${l} ${c} ${h})', // ${hex}`.replace('NaN', 0);
+  })
+  .replace('const defaultTheme =', 'const defaultTheme: Theme = <Theme> ')
+  .replaceAll(/'color-[a-z]+-\d+':/g, (line) => {
+    return line.includes('500') ||
+      line.includes('color-neutral-0') ||
+      line.includes('color-neutral-1000')
+      ? line
+      : `// ${line}`;
+  })
+  .replace(/\/\/ === types ===[^/]+\/\/ === main ===/m, '// === main ===')
+  .replace(
+    'Object.freeze(defaultTheme);',
+    `
+    // Calculate and overwrite or add color values
 
-fs.writeFileSync(outputFileLch, outputLch);
+    const lightnessValuesLight = [
+      97, // 50
+      57, // 100
+      89, // 200
+      81, // 300
+      72, // 400
+      64, // 500
+      53, // 600
+      42, // 700
+      36, // 800
+      30, // 900
+      19 // 950
+    ];
+
+    [...semanticColors, ...paletteColors].forEach((color) => {
+      const lch = defaultTheme[\`color-\${color}-500\` as keyof Theme]
+        .substring(4).split(' ');
+
+      colorShades.forEach((shade, shadeIdx) => {
+        lch[0] = String(lightnessValuesLight[shadeIdx]);
+        defaultTheme[\`color-\${color}-\${shade}\` as keyof Theme] =
+          \`lhc(\${lch.join(' ')})\`;
+      });
+    });
+    
+    Object.freeze(defaultTheme);
+
+    // === types =========================================================
+
+    type Theme = {
+      'light': string,
+      'dark': string,
+      ${themeTokens.map((token) => `'${token[0]}': string;`).join('\n    ')}
+    };
+  `
+  );
+
+fs.writeFileSync(outputFileLch, prettify(outputLch));
+
+// helper functions
+
+function prettify(sourceCode) {
+  return prettier.format(sourceCode, {
+    parser: 'typescript',
+    singleQuote: true,
+    quoteProps: 'consistent'
+  });
+}

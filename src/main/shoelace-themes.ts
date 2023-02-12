@@ -1,6 +1,8 @@
 export type { Theme } from './shoelace-themes/generated/default-theme';
 export { ThemeModifiers } from './shoelace-themes/theme-modifiers';
 export { ColorSetups } from './shoelace-themes/color-setups';
+export { defaultTheme } from './shoelace-themes/generated/default-theme';
+export { defaultTheme as defaultThemeLch } from './shoelace-themes/generated/default-theme-lch';
 
 export {
   convertThemeToCss,
