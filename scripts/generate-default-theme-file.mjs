@@ -1,5 +1,6 @@
 import path from 'path';
 import color from 'color';
+import chroma from 'chroma-js';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import prettier from 'prettier';
@@ -136,3 +137,22 @@ output = prettier.format(output, {
 });
 
 fs.writeFileSync(outputFile, output);
+
+// ===================================================================
+
+const outputFileLch = path.join(
+  __dirname,
+  '../src/main/shoelace-themes/generated/default-theme-lch.ts'
+);
+
+const outputLch = output.replaceAll(/'(#[0-9A-F]{6})'/g, (all, hex) => {
+  const lch = chroma(hex).lch();
+
+  const l = Math.round(lch[0]);
+  const c = Math.round(lch[1]);
+  const h = Math.round(lch[2]);
+
+  return `'lch(${l} ${c} ${h})'`.replace('NaN', 0);
+});
+
+fs.writeFileSync(outputFileLch, outputLch);

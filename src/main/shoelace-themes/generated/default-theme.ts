@@ -56,6 +56,7 @@ const colorShades = Object.freeze([
 
 const utilityStyles = `
   .sl-scroll-lock {
+    padding-right: var(--sl-scroll-lock-size) !important;
     overflow: hidden !important;
   }
   
@@ -435,6 +436,8 @@ const defaultTheme = {
   'input-spacing-small': 'var(--sl-spacing-small)',
   'input-spacing-medium': 'var(--sl-spacing-medium)',
   'input-spacing-large': 'var(--sl-spacing-large)',
+  'input-focus-ring-color': 'hsl(198.6 88.7% 48.4% / 40%)',
+  'input-focus-ring-offset': '0',
   'input-filled-background-color': 'var(--sl-color-neutral-100)',
   'input-filled-background-color-hover': 'var(--sl-color-neutral-100)',
   'input-filled-background-color-focus': 'var(--sl-color-neutral-100)',
@@ -443,8 +446,6 @@ const defaultTheme = {
   'input-filled-color-hover': 'var(--sl-color-neutral-800)',
   'input-filled-color-focus': 'var(--sl-color-neutral-700)',
   'input-filled-color-disabled': 'var(--sl-color-neutral-800)',
-  'input-focus-ring-color': 'hsl(198.6 88.7% 48.4% / 40%)',
-  'input-focus-ring-offset': '0',
   'input-label-font-size-small': 'var(--sl-font-size-small)',
   'input-label-font-size-medium': 'var(--sl-font-size-medium)',
   'input-label-font-size-large': 'var(--sl-font-size-large)',
