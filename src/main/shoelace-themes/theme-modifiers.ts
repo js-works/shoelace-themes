@@ -4,6 +4,8 @@ import {
   semanticColors
 } from './generated/default-theme';
 
+import { updateLuminance } from './color-utils';
+
 import type { Theme } from './generated/default-theme';
 
 // === exports =======================================================
@@ -28,7 +30,7 @@ type ModifierName = keyof typeof modifiers;
 
 type ModifiersBuilder<M extends ModifierName = ModifierName> = {
   [K in M]: (
-    ...args: Args<typeof modifiers[K]>
+    ...args: Args<(typeof modifiers)[K]>
   ) => ModifiersBuilder<Exclude<M, K>>;
 } & {
   build(): ((theme: Theme) => Partial<Theme>)[];
@@ -235,72 +237,11 @@ function calcColorShades(
       idx = 1000 - idx;
     }
 
-    ret[`color-${colorName}-${colorShades[idx]}`] =
-      'rgb(' + calcColor(colorHex, luminance).join(' ') + ')';
+    ret[`color-${colorName}-${colorShades[idx]}`] = updateLuminance(
+      colorHex,
+      luminance
+    );
   });
 
   return ret;
-}
-
-// === color utility functions =======================================
-
-function calcColor(hex: string, lum: number): [number, number, number] {
-  let [r, g, b] = hexToRgb(hex);
-  let iter = 0;
-  let l = luminanceOfRgb(r, g, b);
-  let rmin = 0;
-  let gmin = 0;
-  let bmin = 0;
-  let rmax = 255;
-  let gmax = 255;
-  let bmax = 255;
-
-  while (++iter <= 20 && Math.abs(l - lum) > 1e-7) {
-    if (l < lum) {
-      rmin = r;
-      gmin = g;
-      bmin = b;
-    } else {
-      rmax = r;
-      gmax = g;
-      bmax = b;
-    }
-
-    r = (rmin + rmax) / 2;
-    g = (gmin + gmax) / 2;
-    b = (bmin + bmax) / 2;
-    l = luminanceOfRgb(r, g, b);
-  }
-
-  return [Math.round(r), Math.round(g), Math.round(b)];
-}
-
-function hexToRgb(hex: string): [number, number, number] {
-  const value = parseInt(hex.substr(1), 16);
-
-  if (isNaN(value) || hex[0] !== '#' || hex.length !== 7) {
-    throw new Error(`Illegal color '${hex}'. Required hex format: #rrggbb`);
-  }
-
-  const r = (value >> 16) % 256;
-  const g = (value >> 8) % 256;
-  const b = value % 256;
-
-  return [r, g, b];
-}
-
-function luminanceOfRgb(r: number, g: number, b: number): number {
-  // relative luminance
-  // see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
-  const lr = luminanceOfValue(r);
-  const lg = luminanceOfValue(g);
-  const lb = luminanceOfValue(b);
-
-  return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
-}
-
-function luminanceOfValue(x: number): number {
-  const v = x / 255;
-
-  return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
 }

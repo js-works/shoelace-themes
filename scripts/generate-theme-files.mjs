@@ -132,7 +132,69 @@ const output = `
 
 fs.writeFileSync(outputFile, prettify(output));
 
-// ===================================================================
+// === LilTheme ======================================================
+
+const outputFileLilTheme = path.join(
+  __dirname,
+  '../src/main/shoelace-themes/generated/lil-theme.ts'
+);
+
+const luminancesLight = colorShades.map(
+  (shade) =>
+    Math.round(
+      color(
+        themeTokens.find((it) => it[0] === `color-danger-${shade}`)[1]
+      ).luminosity() * 100
+    ) / 100
+);
+
+const outputLilTheme =
+  "import { updateLuminance } from '../color-utils';\n" +
+  output
+    .replaceAll('defaultTheme', 'lilTheme')
+    .replace('const lilTheme =', 'const lilTheme: Theme = <Theme> ')
+    .replaceAll(/'color-[a-z]+-\d+':/g, (line) => {
+      return line.includes('500') || line.includes('color-neutral-')
+        ? line
+        : `// ${line}`;
+    })
+    .replace(/\/\/ === types ===[^/]+\/\/ === main ===/m, '// === main ===')
+    .replace(
+      'Object.freeze(lilTheme);',
+      `
+    // Calculate and overwrite or add color values
+
+    const luminancesLight = [${luminancesLight.join(',')}]; 
+
+    [...semanticColors, ...paletteColors].forEach((color) => {
+      if (color !== 'neutral') {
+        const hex = lilTheme[\`color-\${color}-500\` as keyof Theme];
+
+        colorShades.forEach((shade, shadeIdx) => {
+          const newHex = updateLuminance(hex, luminancesLight[shadeIdx], 1e-2);
+
+          lilTheme[\`color-\${color}-\${shade}\` as keyof Theme] = newHex;
+        });
+      }
+    });
+    
+    Object.freeze(lilTheme);
+
+    // === types =========================================================
+
+    type Theme = {
+      'light': string,
+      'dark': string,
+      ${themeTokens.map((token) => `'${token[0]}': string;`).join('\n    ')}
+    };
+  `
+    );
+
+fs.writeFileSync(outputFileLilTheme, prettify(outputLilTheme));
+
+/* LCH support doesn't work properly :-(
+
+// === LCH ===========================================================
 
 const outputFileLch = path.join(
   __dirname,
@@ -201,6 +263,8 @@ const outputLch = output
   );
 
 fs.writeFileSync(outputFileLch, prettify(outputLch));
+
+*/
 
 // helper functions
 

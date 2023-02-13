@@ -7,7 +7,7 @@ import { execSync } from 'child_process';
 import { promisify } from 'util';
 import archiver from 'archiver';
 
-import './generate-default-theme-file.mjs';
+import './generate-theme-files.mjs';
 
 const brotliCompress = promisify(zlib.brotliCompress);
 

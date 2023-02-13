@@ -1,6 +1,6 @@
 {
   "name": "shoelace-themes",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "",
   "type": "module",
   "exports": {
@@ -16,7 +16,7 @@
     "start": "vite",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./scripts/build.mjs",
-    "generate": "node ./scripts/generate-default-theme-file.mjs"
+    "generate": "node ./scripts/generate-theme-files.mjs"
   },
   "repository": {
     "type": "git",
