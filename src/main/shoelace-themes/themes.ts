@@ -3,6 +3,6 @@ export {
   semanticColors,
   paletteColors,
   utilityStyles
-} from './generated/generated-mini-theme';
+} from './generated/generated-theme-meta';
 
-export type { Theme } from './generated/generated-mini-theme';
+export type { Theme } from './generated/generated-theme-meta';

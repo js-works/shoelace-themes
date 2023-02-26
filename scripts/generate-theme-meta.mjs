@@ -14,7 +14,7 @@ const inputFile = path.join(
 
 const outputFile = path.join(
   __dirname,
-  '../src/main/shoelace-themes/generated/generated-default-theme.ts'
+  '../src/main/shoelace-themes/generated/generated-theme-meta.ts'
 );
 
 const input = fs.readFileSync(inputFile, 'utf8');
@@ -77,17 +77,6 @@ themeTokens.forEach(([key, value], idx) => {
   }
 });
 
-themeTokens.forEach(([key, value], idx) => {
-  if (
-    key.match(/^color-[a-z]+-\d+$/) && //
-    value.match(/hsl\([^)]+\)/)
-  ) {
-    const newColorString = color(themeTokens[idx][1]).hex();
-
-    themeTokens[idx][1] = `${newColorString}`;
-  }
-});
-
 const output = `
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // !!! This file is auto-generated - do not modify it !!!
@@ -97,7 +86,6 @@ const output = `
 
   export {
     colorShades,
-    defaultTheme,
     paletteColors,
     semanticColors,
     utilityStyles
@@ -105,12 +93,7 @@ const output = `
 
   export type { Theme };
 
-  // === types =======================================================
-
-  type ThemeTokens = typeof defaultTheme;
-  interface Theme extends ThemeTokens {}
-
-  // === main ========================================================
+  // === meta data ===================================================
 
   const semanticColors = Object.freeze(['${semanticColors.join("', '")}']);
   
@@ -120,13 +103,13 @@ const output = `
 
   const utilityStyles = \`\n${utilityStyles}\`;
 
-  const defaultTheme = {
+  // === types =======================================================
+
+  type Theme = Readonly<{
     'light': 'initial',
     'dark': ' ',
-    ${themeTokens.map((it) => `'${it[0]}': '${it[1]}',`).join('\n')}
-  };
-
-  Object.freeze(defaultTheme);
+    ${themeTokens.map((it) => `'${it[0]}': string;`).join('\n')}
+  }>;
 `;
 
 fs.writeFileSync(outputFile, prettify(output));
