@@ -48,7 +48,7 @@ function modifyColors(theme: Theme, colorSetup: ColorSetup): Partial<Theme> {
     }
   }
 
-  (ret as any)['input-focus-ring-color'] = ret['color-primary-500']!.replace(
+  (ret as any)['input-focus-ring-color'] = theme['color-primary-500']!.replace(
     ')',
     ' / 40%)'
   );

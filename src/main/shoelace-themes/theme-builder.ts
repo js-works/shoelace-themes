@@ -18,6 +18,13 @@ const assign = <T, U>(obj: T, obj2: U): T & U =>
 const hasOwn = (obj: object, key: string) => Object.hasOwn(obj, key);
 const freeze = <T extends object>(obj: T) => Object.freeze(obj);
 
+const colorKeyMap = {
+  p: 'primary',
+  s: 'success',
+  w: 'warning',
+  d: 'danger'
+};
+
 // === ThemeBuilder ==================================================
 
 function createBuilder(baseTheme: Theme) {
@@ -119,74 +126,35 @@ const themeVariants = {
 
 // === theme color setups ============================================
 
-const colorSetups = {
-  default: {
-    primaryColor: '#1C73E8',
-    // primaryColor: '#2899e2',
-    //primaryColor: '#0077cB',
-    dangerColor: '#f15f41'
-  },
+// Error colors
+// #FFA6C9
+// #F77703
+// #FF6B53
 
-  blue: {
-    primaryColor: '#00B0FF',
-    dangerColor: '#f15f41'
-  },
+const colorSetups = expandColorsRecord({
+  default: 'p:#1c73e8,d:#f15f41',
+  blue: 'p:#00b0ff,d:#f15f41',
+  orange: 'p:#ff7606',
+  teal: 'p:#008080',
+  horizon: 'p:#71d9f2',
+  bostonBlue: 'p:#45b1e8,d:#e34234',
+  pacificBlue: 'p:#0e94bb,d:#ff5000',
+  violet: 'p:#b882ed',
+  cranberry: 'p:#dd5a8c',
+  turquoiseBlue: 'p:#47e3eb',
+  orchid: 'p:#bf68bd',
+  bootstrap: 'p:#0d6efd,s:#198754,w:#ffc107,d:#dc3545',
+  baseweb: 'p:#266ef1,d:#f25238',
+  temp: 'p:#00586b',
+  temp2: 'p:#ff746a',
+  skyBlue: 'p:#0ea5e9,d:#e95420',
+  aquamarine: 'p:#7FFFD4',
+  coral: 'p:#ff7f50',
+  pink: 'p:#d24899',
+  turquoise: 'p:#40e0d0',
+  tomato: 'p:#ff6347'
 
-  orange: {
-    primaryColor: '#ff7606'
-  },
-
-  teal: {
-    primaryColor: '#008080'
-  },
-
-  // Error colors
-  // #FFA6C9
-  // #F77703
-  // #FF6B53
-
-  horizon: {
-    primaryColor: '#71d9f2'
-  },
-
-  bostonBlue: {
-    primaryColor: '#45B1E8',
-    dangerColor: '#E34234'
-  },
-
-  pacificBlue: {
-    primaryColor: '#0E94BB',
-    dangerColor: '#ff5000'
-  },
-
-  violet: {
-    primaryColor: '#B882ED'
-  },
-
-  cranberry: {
-    primaryColor: '#DD5A8C'
-  },
-
-  turquoiseBlue: {
-    primaryColor: '#47E3EB'
-  },
-
-  orchid: {
-    primaryColor: '#BF68BD'
-  },
-
-  bootstrap: {
-    primaryColor: '#0d6efd',
-    successColor: '#198754',
-    dangerColor: '#dc3545',
-    warningColor: '#ffc107'
-  },
-
-  baseweb: {
-    primaryColor: '#266EF1',
-    dangerColor: '#F25238'
-  },
-
+  /*
   temp: {
     primaryColor: '#00586B'
     //primaryColor: '#2889e2' // baseui based
@@ -233,33 +201,25 @@ const colorSetups = {
     //primaryColor: '#5f9ea0' //
     //primaryColor: '#ff8c00' //
   },
+  */
+});
 
-  temp2: {
-    primaryColor: '#ff746a'
-  },
+function expandColorsRecord<K extends string>(
+  colorsRecord: Record<K, string>
+): Record<K, ColorSetup> {
+  const ret = {} as Record<K, ColorSetup>;
 
-  skyBlue: {
-    primaryColor: '#0ea5e9',
-    dangerColor: '#e95420'
-  },
+  for (const key of Object.keys(colorsRecord)) {
+    const setup: ColorSetup = {};
 
-  aquamarine: {
-    primaryColor: '#7FFFD4'
-  },
+    for (const token of colorsRecord[key as K].split(',')) {
+      const [k, v] = token.split(':');
+      const k2 = colorKeyMap[k as keyof typeof colorKeyMap];
+      setup[k2 as keyof ColorSetup] = v;
+    }
 
-  coral: {
-    primaryColor: '#ff7f50'
-  },
-
-  pink: {
-    primaryColor: '#d24899'
-  },
-
-  turquoise: {
-    primaryColor: '#40e0d0'
-  },
-
-  tomato: {
-    primaryColor: '#ff6347'
+    ret[key as K] = setup;
   }
-} satisfies Record<string, ColorSetup>;
+
+  return ret;
+}
