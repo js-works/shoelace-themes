@@ -1,16 +1,10 @@
-import {
-  colorShades,
-  paletteColors,
-  semanticColors
-} from './generated/default-theme';
-
+import { colorShades, paletteColors, semanticColors } from './themes';
 import { updateLuminance } from './color-utils';
-
-import type { Theme } from './generated/default-theme';
+import type { Theme } from './themes';
 
 // === exports =======================================================
 
-export { ThemeModifiers };
+export { modifyColors, modifyDark };
 
 // === local types ===================================================
 
@@ -20,20 +14,6 @@ export type ColorSetup = {
   warningColor?: string;
   dangerColor?: string;
   neutralColor?: string;
-};
-
-type Args<F extends Function> = F extends (...args: infer A) => unknown
-  ? A
-  : never;
-
-type ModifierName = keyof typeof modifiers;
-
-type ModifiersBuilder<M extends ModifierName = ModifierName> = {
-  [K in M]: (
-    ...args: Args<(typeof modifiers)[K]>
-  ) => ModifiersBuilder<Exclude<M, K>>;
-} & {
-  build(): ((theme: Theme) => Partial<Theme>)[];
 };
 
 // === constants =====================================================
@@ -54,174 +34,84 @@ const colorLuminances = [
 
 // === theme modifiers ===============================================
 
-const modifiers = {
-  colors(colorSetup: ColorSetup) {
-    return (theme: Theme): Partial<Theme> => {
-      const ret: Partial<Theme> = {};
-      const isDark = theme.dark === 'initial';
+function modifyColors(theme: Theme, colorSetup: ColorSetup): Partial<Theme> {
+  const ret: Partial<Theme> = {};
+  const isDark = theme.dark === 'initial';
 
-      for (const semanticColor of semanticColors) {
-        const colorHex = (colorSetup as any)[`${semanticColor}Color`];
+  for (const semanticColor of semanticColors) {
+    const colorHex = (colorSetup as any)[`${semanticColor}Color`];
 
-        if (colorHex) {
-          Object.assign(ret, {
-            ...calcColorShades(semanticColor, colorHex, isDark)
-          });
-        }
-      }
-
-      ret['input-focus-ring-color'] = ret['color-primary-500']!.replace(
-        ')',
-        ' / 40%)'
-      );
-
-      return ret;
-    };
-  },
-
-  dark() {
-    return (tokens: Theme): Partial<Theme> => {
-      if (tokens.dark === 'initial') {
-        throw new Error(
-          'Colors cannot be inverted to dark mode as base theme is already dark'
-        );
-      }
-
-      const darkTokens: Record<string, string> = Object.assign({}, tokens);
-
-      [...semanticColors, ...paletteColors].forEach((color) => {
-        if ((tokens as any)[`color-${color}-500`].includes('var(')) {
-          return;
-        }
-
-        for (let i = 0; i < 5; ++i) {
-          const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`;
-          const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`;
-
-          darkTokens[key1] = (tokens as any)[key2];
-          darkTokens[key2] = (tokens as any)[key1];
-        }
+    if (colorHex) {
+      Object.assign(ret, {
+        ...calcColorShades(semanticColor, colorHex, isDark)
       });
-
-      Object.assign(darkTokens, {
-        light: ' ',
-        dark: 'initial'
-      } satisfies Partial<Theme>);
-
-      Object.assign(darkTokens, {
-        'color-neutral-0': 'rgb(30 30 33)',
-        'color-neutral-50': 'rgb(36 36 39)',
-        'color-neutral-100': 'rgb(40 40 43)',
-        'color-neutral-200': 'rgb(43 43 46)',
-        'color-neutral-300': 'rgb(67 67 74)',
-        'color-neutral-400': 'rgb(86 86 95)',
-        'color-neutral-500': 'rgb(118 118 127)',
-        'color-neutral-600': 'rgb(166 166 175)',
-        'color-neutral-700': 'rgb(217 217 221)',
-        'color-neutral-800': 'rgb(233 233 236)',
-        'color-neutral-900': 'rgb(249 249 250)',
-        'color-neutral-950': 'rgb(252 252 253)',
-        'color-neutral-1000': 'rgb(255 255 255)'
-      } satisfies Partial<Theme>);
-
-      Object.assign(darkTokens, {
-        'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',
-        'shadow-small': '0 1px 2px rgb(0 0 0 / 24%)',
-        'shadow-medium': '0 2px 4px rgb(0 0 0 / 24%)',
-        'shadow-large': '0 2px 8px rgb(0 0 0 / 24%)',
-        'shadow-x-large': '0 4px 16px rgb(0 0 0 / 24%)',
-        'overlay-background-color': 'hsl(0 0% 0% / 43%)',
-        'panel-background-color': 'var(--sl-color-neutral-50)'
-      } satisfies Partial<Theme>);
-
-      return darkTokens;
-    };
-  },
-
-  modern(veryProgressive = false) {
-    return (): Partial<Theme> => {
-      let ret: Partial<Theme> = {
-        'font-sans':
-          "'Open Sans', -apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-        'font-weight-semibold': '600',
-        'border-radius-small': '0px',
-        'border-radius-medium': '1px',
-        'border-radius-large': '2px',
-        'border-radius-x-large': '3px',
-
-        'focus-ring-width': '1.5px',
-        'input-focus-ring-color': 'var(--sl-color-primary-400)',
-        'input-required-content-color': 'var(--sl-color-danger-800)',
-
-        'input-border-color': 'var(--sl-color-neutral-400)',
-        'input-border-color-hover': 'var(--sl-color-neutral-600)',
-        'input-border-color-focus': 'var(--sl-color-primary-700)',
-
-        'overlay-background-color': 'hsl(0 0% 0% / 55%)'
-      };
-
-      if (veryProgressive) {
-        // TODO!!!
-        const additionalTokens: Partial<Theme> = {
-          'input-background-color': 'rgb(238, 238, 238)',
-          'input-border-color': 'rgb(230, 230, 230)'
-        };
-
-        Object.assign(ret, additionalTokens);
-      }
-
-      return ret;
-    };
-  },
-
-  compact() {
-    return (): Partial<Theme> => {
-      return {
-        'font-size-medium': '0.92rem',
-        'font-size-x-large': '1.5rem',
-        'input-height-small': '1.85rem',
-        'input-height-medium': '1.95rem',
-        'input-height-large': '2.5rem'
-      };
-    };
+    }
   }
-};
 
-const ThemeModifiers = Object.freeze({
-  ...modifiers,
-  builder: (): ModifiersBuilder => {
-    const allMethodNames = Object.keys(ThemeModifiers).filter(
-      (it) => it !== 'builder'
+  ret['input-focus-ring-color'] = ret['color-primary-500']!.replace(
+    ')',
+    ' / 40%)'
+  );
+
+  return ret;
+}
+
+function modifyDark(tokens: Theme): Partial<Theme> {
+  if (tokens.dark === 'initial') {
+    throw new Error(
+      'Colors cannot be inverted to dark mode as base theme is already dark'
     );
-
-    const getBuilder = (
-      usedMethodNames: string[],
-      freeMethodNames: string[],
-      modifiers: ((theme: Theme) => Partial<Theme>)[]
-    ): Partial<ModifiersBuilder> => {
-      const ret: any = {};
-
-      for (const key of freeMethodNames) {
-        ret[key] = (...args: unknown[]) => {
-          const modifier = (ThemeModifiers as Record<string, Function>)[key](
-            ...args
-          );
-
-          return getBuilder(
-            usedMethodNames.concat(key),
-            freeMethodNames.filter((it) => it !== 'key'),
-            modifiers.concat(modifier)
-          );
-        };
-      }
-
-      ret.build = () => modifiers;
-      return ret;
-    };
-
-    return getBuilder([], allMethodNames, []) as any;
   }
-});
+
+  const darkTokens: Record<string, string> = Object.assign({}, tokens);
+
+  [...semanticColors, ...paletteColors].forEach((color) => {
+    if ((tokens as any)[`color-${color}-500`].includes('var(')) {
+      return;
+    }
+
+    for (let i = 0; i < 5; ++i) {
+      const key1 = `color-${color}-${i === 0 ? 50 : i * 100}`;
+      const key2 = `color-${color}-${i === 0 ? 950 : 1000 - i * 100}`;
+
+      darkTokens[key1] = (tokens as any)[key2];
+      darkTokens[key2] = (tokens as any)[key1];
+    }
+  });
+
+  Object.assign(darkTokens, {
+    light: ' ',
+    dark: 'initial'
+  } satisfies Partial<Theme>);
+
+  Object.assign(darkTokens, {
+    'color-neutral-0': 'rgb(30 30 33)',
+    'color-neutral-50': 'rgb(36 36 39)',
+    'color-neutral-100': 'rgb(40 40 43)',
+    'color-neutral-200': 'rgb(43 43 46)',
+    'color-neutral-300': 'rgb(67 67 74)',
+    'color-neutral-400': 'rgb(86 86 95)',
+    'color-neutral-500': 'rgb(118 118 127)',
+    'color-neutral-600': 'rgb(166 166 175)',
+    'color-neutral-700': 'rgb(217 217 221)',
+    'color-neutral-800': 'rgb(233 233 236)',
+    'color-neutral-900': 'rgb(249 249 250)',
+    'color-neutral-950': 'rgb(252 252 253)',
+    'color-neutral-1000': 'rgb(255 255 255)'
+  } satisfies Partial<Theme>);
+
+  Object.assign(darkTokens, {
+    'shadow-x-small': '0 1px 2px rgb(0 0 0 / 18%)',
+    'shadow-small': '0 1px 2px rgb(0 0 0 / 24%)',
+    'shadow-medium': '0 2px 4px rgb(0 0 0 / 24%)',
+    'shadow-large': '0 2px 8px rgb(0 0 0 / 24%)',
+    'shadow-x-large': '0 4px 16px rgb(0 0 0 / 24%)',
+    'overlay-background-color': 'hsl(0 0% 0% / 43%)',
+    'panel-background-color': 'var(--sl-color-neutral-50)'
+  } satisfies Partial<Theme>);
+
+  return darkTokens;
+}
 
 // === local helpers =================================================
 

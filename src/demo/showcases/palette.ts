@@ -2,10 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { repeat } from 'lit/directives/repeat';
 
-import {
-  colorShades,
-  semanticColors
-} from '../../main/shoelace-themes/generated/default-theme';
+import { colorShades, semanticColors } from '../../main/shoelace-themes/themes';
 
 export default document.createElement('showcase-palette');
 

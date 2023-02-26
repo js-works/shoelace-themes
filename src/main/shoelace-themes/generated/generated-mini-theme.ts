@@ -6,7 +6,7 @@ import { updateLuminance } from '../color-utils';
 
 // === exports =====================================================
 
-export { colorShades, lilTheme, paletteColors, semanticColors, utilityStyles };
+export { colorShades, miniTheme, paletteColors, semanticColors, utilityStyles };
 
 export type { Theme };
 
@@ -71,7 +71,7 @@ const utilityStyles = `
   }
 `;
 
-const lilTheme: Theme = <Theme>{
+const miniTheme: Theme = <Theme>{
   'light': 'initial',
   'dark': ' ',
   // 'color-gray-50': '#F9F9F9',
@@ -476,17 +476,17 @@ const luminancesLight = [
 
 [...semanticColors, ...paletteColors].forEach((color) => {
   if (color !== 'neutral') {
-    const hex = lilTheme[`color-${color}-500` as keyof Theme];
+    const hex = miniTheme[`color-${color}-500` as keyof Theme];
 
     colorShades.forEach((shade, shadeIdx) => {
       const newHex = updateLuminance(hex, luminancesLight[shadeIdx], 1e-2);
 
-      lilTheme[`color-${color}-${shade}` as keyof Theme] = newHex;
+      miniTheme[`color-${color}-${shade}` as keyof Theme] = newHex;
     });
   }
 });
 
-Object.freeze(lilTheme);
+Object.freeze(miniTheme);
 
 // === types =========================================================
 

@@ -15,7 +15,7 @@ const inputFile = path.join(
 
 const outputFile = path.join(
   __dirname,
-  '../src/main/shoelace-themes/generated/default-theme.ts'
+  '../src/main/shoelace-themes/generated/generated-default-theme.ts'
 );
 
 const input = fs.readFileSync(inputFile, 'utf8');
@@ -132,11 +132,11 @@ const output = `
 
 fs.writeFileSync(outputFile, prettify(output));
 
-// === LilTheme ======================================================
+// === MiniTheme ======================================================
 
-const outputFileLilTheme = path.join(
+const outputFileMiniTheme = path.join(
   __dirname,
-  '../src/main/shoelace-themes/generated/lil-theme.ts'
+  '../src/main/shoelace-themes/generated/generated-mini-theme.ts'
 );
 
 const luminancesLight = colorShades.map(
@@ -148,11 +148,11 @@ const luminancesLight = colorShades.map(
     ) / 100
 );
 
-const outputLilTheme =
+const outputMiniTheme =
   "import { updateLuminance } from '../color-utils';\n" +
   output
-    .replaceAll('defaultTheme', 'lilTheme')
-    .replace('const lilTheme =', 'const lilTheme: Theme = <Theme> ')
+    .replaceAll('defaultTheme', 'miniTheme')
+    .replace('const miniTheme =', 'const miniTheme: Theme = <Theme> ')
     .replaceAll(/'color-[a-z]+-\d+':/g, (line) => {
       return line.includes('500') || line.includes('color-neutral-')
         ? line
@@ -160,7 +160,7 @@ const outputLilTheme =
     })
     .replace(/\/\/ === types ===[^/]+\/\/ === main ===/m, '// === main ===')
     .replace(
-      'Object.freeze(lilTheme);',
+      'Object.freeze(miniTheme);',
       `
     // Calculate and overwrite or add color values
 
@@ -168,17 +168,17 @@ const outputLilTheme =
 
     [...semanticColors, ...paletteColors].forEach((color) => {
       if (color !== 'neutral') {
-        const hex = lilTheme[\`color-\${color}-500\` as keyof Theme];
+        const hex = miniTheme[\`color-\${color}-500\` as keyof Theme];
 
         colorShades.forEach((shade, shadeIdx) => {
           const newHex = updateLuminance(hex, luminancesLight[shadeIdx], 1e-2);
 
-          lilTheme[\`color-\${color}-\${shade}\` as keyof Theme] = newHex;
+          miniTheme[\`color-\${color}-\${shade}\` as keyof Theme] = newHex;
         });
       }
     });
     
-    Object.freeze(lilTheme);
+    Object.freeze(miniTheme);
 
     // === types =========================================================
 
@@ -190,7 +190,7 @@ const outputLilTheme =
   `
     );
 
-fs.writeFileSync(outputFileLilTheme, prettify(outputLilTheme));
+fs.writeFileSync(outputFileMiniTheme, prettify(outputMiniTheme));
 
 /* LCH support doesn't work properly :-(
 

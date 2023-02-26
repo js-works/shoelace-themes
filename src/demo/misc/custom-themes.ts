@@ -1,194 +1,145 @@
 import {
-  customizeTheme,
   defaultTheme,
-  lilTheme,
-  ColorSetups,
+  miniTheme,
   Theme,
-  ThemeModifiers
+  ThemeBuilder
 } from '../../main/shoelace-themes';
 
 export const customThemes: Record<string, { name: string; theme: Theme }> = {
   'sky-blue-light': {
     name: 'Sky Blue (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.skyBlue)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('skyBlue')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'sky-blue-dark': {
     name: 'Sky Blue (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.skyBlue)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('skyBlue')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
 
   'pacific-blue-light': {
     name: 'Pacific Blue (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.pacificBlue)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('pacificBlue')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'teal-light': {
     name: 'Teal (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.teal)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('teal')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'teal-dark': {
     name: 'Teal (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.teal)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('teal')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
 
   'pacific-blue-dark': {
     name: 'Pacific Blue (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.pacificBlue)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('pacificBlue')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
 
   'pink-light': {
     name: 'Pink (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.pink)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('pink')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'pink-dark': {
     name: 'Pink (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.pink)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('pink')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
 
   'violet-light': {
     name: 'Violet (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.violet)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('violet')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'violet-dark': {
     name: 'Violet (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.violet)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('violet')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
 
   'custom-light': {
     name: 'Custom (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.blue)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('blue')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'custom-dark': {
     name: 'Custom (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.blue)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('blue')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
-  'lil-theme-light': {
-    name: 'Lil theme (light)',
-    theme: lilTheme
+  'mini-theme-light': {
+    name: 'Mini theme (light)',
+    theme: miniTheme
   },
-  'lil-theme-dark': {
-    name: 'Lil theme (dark)',
-    theme: customizeTheme(
-      lilTheme,
-      ThemeModifiers.builder() //
-        .dark()
-        .build()
-    )
+  'mini-theme-dark': {
+    name: 'Mini theme (dark)',
+    theme: ThemeBuilder.from(miniTheme).dark().build()
   },
-  'lil-theme-modern-light': {
-    name: 'Lil theme custom (light)',
-    theme: customizeTheme(
-      lilTheme,
-      ThemeModifiers.builder() //
-        .modern()
-        .compact()
-        .build()
-    )
+  'mini-theme-modern-light': {
+    name: 'Mini theme custom (light)',
+    theme: ThemeBuilder.from(miniTheme)
+      .size('compact')
+      .variant('modern')
+      .build()
   },
-  'lil-theme-modern-dark': {
-    name: 'Lil theme custom (dark)',
-    theme: customizeTheme(
-      lilTheme,
-      ThemeModifiers.builder() //
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+  'mini-theme-modern-dark': {
+    name: 'Mini theme custom (dark)',
+    theme: ThemeBuilder.from(miniTheme)
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   }
 };
