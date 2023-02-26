@@ -16,9 +16,7 @@
     "start": "vite",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./scripts/build.mjs",
-    "generate-theme-files": "node ./scripts/generate-theme-files.mjs",
-    "generate-theme-meta": "node ./scripts/generate-theme-meta.mjs",
-    "generate": "node ./scripts/generate.mjs"
+    "generate": "node ./scripts/generate-theme-files.mjs"
   },
   "repository": {
     "type": "git",

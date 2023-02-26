@@ -1,3 +1,5 @@
+// TODO - this is a total mess with a lot of legacy code - clean up asap
+
 import path from 'path';
 import color from 'color';
 import { fileURLToPath } from 'url';
@@ -12,9 +14,9 @@ const inputFile = path.join(
   '../node_modules/@shoelace-style/shoelace/dist/themes/light.css'
 );
 
-const outputFile = path.join(
+const outputFileMiniTheme = path.join(
   __dirname,
-  '../src/main/shoelace-themes/generated/generated-theme-meta.ts'
+  '../src/main/shoelace-themes/generated/generated-mini-theme.ts'
 );
 
 const input = fs.readFileSync(inputFile, 'utf8');
@@ -77,42 +79,74 @@ themeTokens.forEach(([key, value], idx) => {
   }
 });
 
+themeTokens.forEach(([key, value], idx) => {
+  if (
+    key.match(/^color-[a-z]+-\d+$/) && //
+    value.match(/hsl\([^)]+\)/)
+  ) {
+    const newColorString = color(themeTokens[idx][1]).hex();
+
+    themeTokens[idx][1] = `${newColorString}`;
+  }
+});
+
 const output = `
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // !!! This file is auto-generated - do not modify it !!!
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  // === exports =====================================================
-
-  export {
+  import {
     colorShades,
     paletteColors,
     semanticColors,
-    utilityStyles
-  };
+  } from './generated-theme-meta';
 
-  export type { Theme };
-
-  // === meta data ===================================================
-
-  const semanticColors = Object.freeze(['${semanticColors.join("', '")}']);
-  
-  const paletteColors = Object.freeze(['${paletteColors.join("', '")}']);
-
-  const colorShades = Object.freeze([${colorShades.join(',')}]);
-
-  const utilityStyles = \`\n${utilityStyles}\`;
-
-  // === types =======================================================
-
-  type Theme = Readonly<{
-    'light': 'initial' | ' ',
-    'dark': ' ' | 'initial',
-    ${themeTokens.map((it) => `'${it[0]}': string;`).join('\n')}
-  }>;
+  import { updateLuminance } from '../color-utils';
+  import type { Theme } from './generated-theme-meta';
+    
+  export const miniTheme: Theme = {
+    'light': 'initial',
+    'dark': ' ',
+    ${themeTokens.map((it) => `'${it[0]}': '${it[1]}',`).join('\n')}
+  } as Theme;
 `;
 
-fs.writeFileSync(outputFile, prettify(output));
+const luminancesLight = colorShades.map(
+  (shade) =>
+    Math.round(
+      color(
+        themeTokens.find((it) => it[0] === `color-danger-${shade}`)[1]
+      ).luminosity() * 100
+    ) / 100
+);
+
+const outputMiniTheme =
+  output.replaceAll(/'color-[a-z]+-\d+':/g, (line) => {
+    return line.includes('500') || line.includes('color-neutral-')
+      ? line
+      : `// ${line}`;
+  }) +
+  `
+    // Calculate and overwrite or add color values
+
+    const luminancesLight = [${luminancesLight.join(',')}]; 
+
+    [...semanticColors, ...paletteColors].forEach((color) => {
+      if (color !== 'neutral') {
+        const hex = miniTheme[\`color-\${color}-500\` as keyof Theme];
+
+        colorShades.forEach((shade, shadeIdx) => {
+          const newHex = updateLuminance(hex, luminancesLight[shadeIdx], 1e-2);
+
+          (miniTheme as any)[\`color-\${color}-\${shade}\` as keyof Theme] = newHex;
+        });
+      }
+    });
+    
+    Object.freeze(miniTheme);
+  `;
+
+fs.writeFileSync(outputFileMiniTheme, prettify(outputMiniTheme));
 
 // helper functions
 

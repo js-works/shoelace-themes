@@ -2,85 +2,9 @@
 // !!! This file is auto-generated - do not modify it !!!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-// === exports =====================================================
+import type { Theme } from './generated-theme-meta';
 
-export {
-  colorShades,
-  defaultTheme,
-  paletteColors,
-  semanticColors,
-  utilityStyles,
-};
-
-export type { Theme };
-
-// === types =======================================================
-
-type ThemeTokens = typeof defaultTheme;
-interface Theme extends ThemeTokens {}
-
-// === main ========================================================
-
-const semanticColors = Object.freeze([
-  'neutral',
-  'primary',
-  'success',
-  'warning',
-  'danger',
-]);
-
-const paletteColors = Object.freeze([
-  'amber',
-  'blue',
-  'cyan',
-  'emerald',
-  'fuchsia',
-  'gray',
-  'green',
-  'indigo',
-  'lime',
-  'orange',
-  'pink',
-  'purple',
-  'red',
-  'rose',
-  'sky',
-  'teal',
-  'violet',
-  'yellow',
-]);
-
-const colorShades = Object.freeze([
-  50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
-]);
-
-const utilityStyles = `
-  .sl-scroll-lock {
-    padding-right: var(--sl-scroll-lock-size) !important;
-    overflow: hidden !important;
-  }
-  
-  .sl-toast-stack {
-    position: fixed;
-    top: 0;
-    inset-inline-end: 0;
-    z-index: var(--sl-z-index-toast);
-    width: 28rem;
-    max-width: 100%;
-    max-height: 100%;
-    overflow: auto;
-  }
-  
-  .sl-toast-stack sl-alert {
-    margin: var(--sl-spacing-medium);
-  }
-  
-  .sl-toast-stack sl-alert::part(base) {
-    box-shadow: var(--sl-shadow-large);
-  }
-`;
-
-const defaultTheme = {
+export const defaultTheme: Theme = {
   'light': 'initial',
   'dark': ' ',
   'color-gray-50': '#F9F9F9',

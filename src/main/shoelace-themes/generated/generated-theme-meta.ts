@@ -72,8 +72,8 @@ const utilityStyles = `
 // === types =======================================================
 
 type Theme = Readonly<{
-  'light': 'initial';
-  'dark': ' ';
+  'light': 'initial' | ' ';
+  'dark': ' ' | 'initial';
   'color-gray-50': string;
   'color-gray-100': string;
   'color-gray-200': string;
