@@ -254,7 +254,7 @@ function expandColorsRecord<K extends string>(
 
 const ThemeBuilder = Object.freeze({
   from: (baseTheme: Theme) => createBuilder(baseTheme),
-  availableSized: freeze(themeSizes) as Record<string, Partial<Theme>>,
+  availableSizes: freeze(themeSizes) as Record<string, Partial<Theme>>,
   availableVariants: freeze(themeVariants) as Record<string, Partial<Theme>>,
   availableColors: freeze(colorSetups) as Record<string, ColorSetup>
 });
