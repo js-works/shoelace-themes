@@ -9,11 +9,11 @@ export { modifyColors, modifyDark };
 // === local types ===================================================
 
 export type ColorSetup = {
-  primaryColor?: string;
-  successColor?: string;
-  warningColor?: string;
-  dangerColor?: string;
-  neutralColor?: string;
+  readonly primaryColor?: string;
+  readonly successColor?: string;
+  readonly warningColor?: string;
+  readonly dangerColor?: string;
+  readonly neutralColor?: string;
 };
 
 // === constants =====================================================
@@ -63,7 +63,10 @@ function modifyDark(tokens: Theme): Partial<Theme> {
     );
   }
 
-  const darkTokens: Record<string, string> = Object.assign({}, tokens);
+  const darkTokens: Record<string, string> = Object.assign(
+    {},
+    tokens as unknown as Record<string, string>
+  );
 
   [...semanticColors, ...paletteColors].forEach((color) => {
     if ((tokens as any)[`color-${color}-500`].includes('var(')) {

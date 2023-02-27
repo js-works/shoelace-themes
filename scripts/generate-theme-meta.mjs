@@ -105,11 +105,11 @@ const output = `
 
   // === types =======================================================
 
-  type Theme = Readonly<{
-    'light': 'initial' | ' ',
-    'dark': ' ' | 'initial',
-    ${themeTokens.map((it) => `'${it[0]}': string;`).join('\n')}
-  }>;
+  interface Theme {
+    readonly 'light': 'initial' | ' ',
+    readonly 'dark': ' ' | 'initial',
+    ${themeTokens.map((it) => `readonly '${it[0]}': string;`).join('\n')}
+  };
 `;
 
 fs.writeFileSync(outputFile, prettify(output));

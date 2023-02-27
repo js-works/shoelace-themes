@@ -10,11 +10,16 @@ export { ThemeBuilder };
 
 type NamedModifications = Record<string, Partial<Theme>>;
 
+type Writable<T extends object> = {
+  -readonly [K in keyof T]: T[K];
+};
+
 // === local helpers =================================================
 
 const assign = <T, U>(obj: T, obj2: U): T & U =>
   Object.assign(obj as {}, obj2) as any;
 
+const keys = (obj: object) => Object.keys(obj);
 const hasOwn = (obj: object, key: string) => Object.hasOwn(obj, key);
 const freeze = <T extends object>(obj: T) => Object.freeze(obj);
 
@@ -25,10 +30,10 @@ const colorKeyMap = {
   d: 'danger'
 };
 
-// === ThemeBuilder ==================================================
+// === createBuilder =================================================
 
 function createBuilder(baseTheme: Theme) {
-  const theme = { ...baseTheme };
+  const theme: Theme = { ...baseTheme };
 
   const addBuildAndApplyToFn = <T extends object>(obj: T) =>
     assign(obj, {
@@ -41,7 +46,18 @@ function createBuilder(baseTheme: Theme) {
       dark() {
         assign(theme, modifyDark(theme));
 
-        return addBuildAndApplyToFn({});
+        return freeze(addBuildAndApplyToFn({}));
+      }
+    });
+
+  const addCustomFn = <T>(obj: T) =>
+    assign(obj, {
+      custom: (...mappers: ((theme: Theme) => Partial<Theme>)[]) => {
+        for (const mapper of mappers) {
+          assign(theme, mapper(theme));
+        }
+
+        return freeze(addDarkFn(addBuildAndApplyToFn({})));
       }
     });
 
@@ -52,7 +68,7 @@ function createBuilder(baseTheme: Theme) {
           assign(theme, themeVariants[variant]);
         }
 
-        return addDarkFn(addBuildAndApplyToFn({}));
+        return freeze(addCustomFn(addDarkFn(addBuildAndApplyToFn({}))));
       }
     });
 
@@ -63,46 +79,56 @@ function createBuilder(baseTheme: Theme) {
           assign(theme, themeSizes[size]);
         }
 
-        return addVariantFn(addDarkFn(addBuildAndApplyToFn({})));
+        return freeze(
+          addVariantFn(addCustomFn(addDarkFn(addBuildAndApplyToFn({}))))
+        );
       }
     });
 
   const addColorsFn = <T>(obj: T) =>
     assign(obj, {
-      colors: (colors: keyof typeof colorSetups) => {
-        if (hasOwn(colorSetups, colors)) {
-          assign(theme, modifyColors(theme, colorSetups[colors]));
+      colors: (colors: keyof typeof colorSetups | ColorSetup) => {
+        if (typeof colors === 'string') {
+          if (hasOwn(colorSetups, colors)) {
+            assign(theme, modifyColors(theme, colorSetups[colors]));
+          }
+        } else {
+          assign(theme, modifyColors(theme, colors));
         }
 
-        return addSizeFn(addVariantFn(addDarkFn(addBuildAndApplyToFn({}))));
+        return freeze(
+          addSizeFn(
+            addVariantFn(addCustomFn(addDarkFn(addBuildAndApplyToFn({}))))
+          )
+        );
       }
     });
 
-  return addSizeFn(
-    addColorsFn(addVariantFn(addDarkFn(addBuildAndApplyToFn({}))))
+  return freeze(
+    addSizeFn(
+      addColorsFn(
+        addVariantFn(addCustomFn(addDarkFn(addBuildAndApplyToFn({}))))
+      )
+    )
   );
 }
 
-const ThemeBuilder = Object.freeze({
-  from: (baseTheme: Theme) => createBuilder(baseTheme)
-});
-
 // === theme sizes ===================================================
 
-const themeSizes = {
-  compact: {
+const themeSizes = freeze({
+  compact: freeze({
     'font-size-medium': '0.92rem',
     'font-size-x-large': '1.5rem',
     'input-height-small': '1.85rem',
     'input-height-medium': '1.95rem',
     'input-height-large': '2.5rem'
-  }
-} satisfies NamedModifications;
+  })
+}) satisfies NamedModifications;
 
 // === theme variants ================================================
 
-const themeVariants = {
-  modern: {
+const themeVariants = freeze({
+  modern: freeze({
     'font-sans':
       "'Open Sans', -apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
 
@@ -121,8 +147,8 @@ const themeVariants = {
     'input-border-color-focus': 'var(--sl-color-primary-700)',
 
     'overlay-background-color': 'hsl(0 0% 0% / 55%)'
-  }
-} satisfies NamedModifications;
+  })
+}) satisfies NamedModifications;
 
 // === theme color setups ============================================
 
@@ -210,7 +236,7 @@ function expandColorsRecord<K extends string>(
   const ret = {} as Record<K, ColorSetup>;
 
   for (const key of Object.keys(colorsRecord)) {
-    const setup: ColorSetup = {};
+    const setup: Writable<ColorSetup> = {};
 
     for (const token of colorsRecord[key as K].split(',')) {
       const [k, v] = token.split(':');
@@ -218,8 +244,17 @@ function expandColorsRecord<K extends string>(
       setup[k2 as keyof ColorSetup] = v;
     }
 
-    ret[key as K] = setup;
+    ret[key as K] = freeze(setup);
   }
 
-  return ret;
+  return freeze(ret);
 }
+
+// === ThemeBuilder ==================================================
+
+const ThemeBuilder = Object.freeze({
+  from: (baseTheme: Theme) => createBuilder(baseTheme),
+  availableSized: freeze(themeSizes) as Record<string, Partial<Theme>>,
+  availableVariants: freeze(themeVariants) as Record<string, Partial<Theme>>,
+  availableColors: freeze(colorSetups) as Record<string, ColorSetup>
+});
